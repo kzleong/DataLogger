@@ -14,7 +14,7 @@ def SaveDatatoCSV():
     serialPort = serial.Serial(port="COM10", baudrate=9600, timeout=2)
 
     # Output CSV file configuration
-    output_file = "fteg_data.csv"
+    output_file = (lambda date: f"fteg_log_{date}.csv") (datetime.now().strftime("%Y%m%d%H%M%S"))
     fieldnames = ["Timestamp", "Voltage (mV)"]
 
     # Regex to match "Voltage: <value> mV", handling fragmented lines
