@@ -11,14 +11,14 @@ import re
 def SaveDatatoCSV():
     # Configuration for serial port
     # Adjust 'COM4' to match your system's port
-    serialPort = serial.Serial(port="COM10", baudrate=9600, timeout=2)
+    serialPort = serial.Serial(port="COM10", baudrate=115200, timeout=2)
 
     # Output CSV file configuration
     output_file = (lambda date: f"fteg_log_{date}.csv") (datetime.now().strftime("%Y%m%d%H%M%S"))
     fieldnames = ["Timestamp", "Voltage (mV)"]
 
     # Regex to match "Voltage: <value> mV", handling fragmented lines
-    VOLTAGE_REGEX = r"Voltage:\s*(-?\d*\.\d+|\d+)\s*mV"
+    VOLTAGE_REGEX = r"Voltage \(mV\):\s*(-?\d+(?:[\.,]\d+)?)"
 
     # Buffer to accumulate partial lines
     buffer = ""
@@ -38,6 +38,7 @@ def SaveDatatoCSV():
                 if serialPort.in_waiting > 0:
                     # Read the serial data as a string
                     serialString = serialPort.read(serialPort.in_waiting).decode("ascii", errors="ignore").strip()
+                    # print(serialString)
                     buffer += serialString  # Append incoming data to the buffer
                     # print("buffer: " + buffer)
                     # # Split the buffer into lines
